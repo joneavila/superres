@@ -54,7 +54,7 @@
 		04057CF32BA7F9A2004AA7DB /* RealESRGAN.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = RealESRGAN.mlpackage; sourceTree = "<group>"; };
 		04057CF52BA80D07004AA7DB /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		04057CF72BA810F3004AA7DB /* Docs */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Docs; sourceTree = "<group>"; };
-		04057CF92BA829BD004AA7DB /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
+		04057CF92BA829BD004AA7DB /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE; path = Superres/LICENSE; sourceTree = SOURCE_ROOT; };
 		041D7F942B81ED60006BA794 /* Upscaler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upscaler.swift; sourceTree = "<group>"; };
 		0422B5792B76D13B0054A6B0 /* Superres.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Superres.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0422B57C2B76D13B0054A6B0 /* SuperresApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperresApp.swift; sourceTree = "<group>"; };
@@ -107,6 +107,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		04057CFB2BA83108004AA7DB /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				0422B5832B76D13D0054A6B0 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
 		0422B5702B76D13B0054A6B0 = {
 			isa = PBXGroup;
 			children = (
@@ -132,6 +140,9 @@
 		0422B57B2B76D13B0054A6B0 /* Superres */ = {
 			isa = PBXGroup;
 			children = (
+				04057CF92BA829BD004AA7DB /* LICENSE */,
+				04057CFB2BA83108004AA7DB /* Preview Content */,
+				0422B5802B76D13D0054A6B0 /* Assets.xcassets */,
 				0422B5852B76D13D0054A6B0 /* Superres.entitlements */,
 				046B482B2BA76A6D006ED02A /* Extensions */,
 				046B482A2BA7673D006ED02A /* Models */,
@@ -175,10 +186,7 @@
 		042FDF8C2B9F92EC00A68297 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				0422B5802B76D13D0054A6B0 /* Assets.xcassets */,
-				04057CF92BA829BD004AA7DB /* LICENSE */,
 				046611322B9A3DD8003FCB02 /* Credits.rtf */,
-				0422B5832B76D13D0054A6B0 /* Preview Assets.xcassets */,
 				042FDF892B9F91DB00A68297 /* ReadexPro.ttf */,
 			);
 			path = Resources;
