@@ -1,6 +1,6 @@
 # Superres
 
-Superres is a macOS application for upscaling images, utilizing Core ML to optimize performance on Mac hardware.
+Superres is a macOS application for upscaling images using Core ML to optimize performance on Mac hardware.
 
 ![Superres Screenshot](Docs/screenshot.png)
 
@@ -12,7 +12,8 @@ Superres is a macOS application for upscaling images, utilizing Core ML to optim
 
 ## Download
 
-Download the latest version from [Releases](https://github.com/joneavila/superres/releases).
+Download the latest version (`Superres.app.zip`
+) from [Releases](https://github.com/joneavila/superres/releases).
 
 ## Acknowledgements
 
