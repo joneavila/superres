@@ -1,4 +1,5 @@
 import SwiftUI
+import UniformTypeIdentifiers
 
 final class ContentViewModel: ObservableObject {
     @Published var upscaledImage: NSImage? = nil
@@ -12,6 +13,8 @@ final class ContentViewModel: ObservableObject {
     @Published var alertMessage = ""
     @Published var automaticallySave = false
     @Published var showSuccessMessage = false
+
+    private let supportedImageTypes: [UTType] = [.bmp, .gif, .jpeg, .png, .tiff]
 
     init() {
         outputFolderUrl = getDownloadsFolder()
@@ -101,7 +104,7 @@ final class ContentViewModel: ObservableObject {
         }
 
         let savePanel = NSSavePanel()
-        savePanel.allowedContentTypes = [.png, .jpeg]
+        savePanel.allowedContentTypes = supportedImageTypes
         savePanel.isExtensionHidden = false
         savePanel.canCreateDirectories = true
         savePanel.message = "Save upscaled image"
@@ -123,25 +126,31 @@ final class ContentViewModel: ObservableObject {
             return
         }
 
-        // Determine the file extension from the URL
-        let fileExtension = url.pathExtension.lowercased()
+        let pathExtension = url.pathExtension.lowercased()
 
         guard let bitmapImage = NSBitmapImageRep(data: imageData) else {
             throw UpscaleError.generic("Error reading image data.")
         }
 
-        var data: Data?
-        switch fileExtension {
-        case "jpg", "jpeg":
-            data = bitmapImage.representation(using: .jpeg, properties: [:])
-        case "png":
-            data = bitmapImage.representation(using: .png, properties: [:])
-        default:
-            throw UpscaleError.generic("Unsupported file format: \(fileExtension)")
-        }
-
-        guard let data = data else {
-            throw UpscaleError.generic("Error reading image data as \(fileExtension) format.")
+        let bitmapType: NSBitmapImageRep.FileType = {
+            switch pathExtension {
+            case "bmp", "dib":
+                return .bmp
+            case "gif":
+                return .gif
+            case "jpg", "jpeg", "jpe", "jif", "jfif", "jfi":
+                return .jpeg
+            case "png":
+                return .png
+            case "tiff", "tif":
+                return .tiff
+            default:
+                return .png
+            }
+        }()
+        
+        guard let data = bitmapImage.representation(using: bitmapType, properties: [:]) else {
+            throw UpscaleError.generic("Error reading image data as \(pathExtension) format.")
         }
 
         do {
@@ -161,10 +170,15 @@ final class ContentViewModel: ObservableObject {
                     return
                 }
 
-                let allowedExtensions = ["png", "jpeg", "jpg"]
-                let fileExtension = url.pathExtension.lowercased()
-                if !allowedExtensions.contains(fileExtension) {
-                    self.displayAlert(title: "Unsupported format", message: "Supported formats: \(allowedExtensions.map { $0.uppercased() }.joined(separator: ", "))")
+                guard let typeIdentifier = try? url.resourceValues(forKeys: [.typeIdentifierKey]).typeIdentifier,
+                      let fileUTType = UTType(typeIdentifier)
+                else {
+                    self.displayAlert(title: "Error", message: "Could not determine the file type.")
+                    return
+                }
+
+                if !self.supportedImageTypes.contains(fileUTType) {
+                    self.displayAlert(title: "Unsupported format", message: "The file is not a recognized image format.")
                     return
                 }
 
@@ -181,7 +195,7 @@ final class ContentViewModel: ObservableObject {
 
     func selectImage() {
         let panel = NSOpenPanel()
-        panel.allowedContentTypes = [.png, .jpeg]
+        panel.allowedContentTypes = supportedImageTypes
         if panel.runModal() != .OK {
             return
         }

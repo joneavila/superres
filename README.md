@@ -6,7 +6,7 @@ Superres is a macOS application for upscaling images using Core ML to optimize p
 
 ## Features
 
-- Drag and drop supported image files (JPEG, PNG)
+- Drag and drop supported image files (BMP, GIF, JPEG, PNG, TIFF)
 - Compare original and upscaled images
 - Automatically save upscaled images to specified folder
 
