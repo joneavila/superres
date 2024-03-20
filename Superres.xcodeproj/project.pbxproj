@@ -10,7 +10,6 @@
 		04057CF42BA7F9A2004AA7DB /* RealESRGAN.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 04057CF32BA7F9A2004AA7DB /* RealESRGAN.mlpackage */; };
 		04057CF62BA80D07004AA7DB /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 04057CF52BA80D07004AA7DB /* README.md */; };
 		04057CF82BA810F3004AA7DB /* Docs in Resources */ = {isa = PBXBuildFile; fileRef = 04057CF72BA810F3004AA7DB /* Docs */; };
-		04057CFA2BA829BD004AA7DB /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 04057CF92BA829BD004AA7DB /* LICENSE */; };
 		041D7F952B81ED60006BA794 /* Upscaler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041D7F942B81ED60006BA794 /* Upscaler.swift */; };
 		0422B57D2B76D13B0054A6B0 /* SuperresApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0422B57C2B76D13B0054A6B0 /* SuperresApp.swift */; };
 		0422B57F2B76D13B0054A6B0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0422B57E2B76D13B0054A6B0 /* ContentView.swift */; };
@@ -26,6 +25,7 @@
 		046611352B9A448D003FCB02 /* ValueTextStyleModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046611342B9A448D003FCB02 /* ValueTextStyleModifier.swift */; };
 		047C09652B91EBEA0023EF37 /* CGImage+CVPixelBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C09642B91EBEA0023EF37 /* CGImage+CVPixelBuffer.swift */; };
 		047C09692B9244350023EF37 /* AcknowledgementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C09682B9244350023EF37 /* AcknowledgementsView.swift */; };
+		04AE96AB2BAAE5BB000D510F /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 04AE96AA2BAAE5BB000D510F /* LICENSE */; };
 		04C377472B8EBA4900AFDDEF /* HeadingTextStyleModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C377462B8EBA4900AFDDEF /* HeadingTextStyleModifier.swift */; };
 		04C377492B8EBB7C00AFDDEF /* TextStyleModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C377482B8EBB7C00AFDDEF /* TextStyleModifier.swift */; };
 		04D529B72BA0F5F400680D86 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D529B62BA0F5F400680D86 /* ContentViewModel.swift */; };
@@ -54,7 +54,6 @@
 		04057CF32BA7F9A2004AA7DB /* RealESRGAN.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = RealESRGAN.mlpackage; sourceTree = "<group>"; };
 		04057CF52BA80D07004AA7DB /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		04057CF72BA810F3004AA7DB /* Docs */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Docs; sourceTree = "<group>"; };
-		04057CF92BA829BD004AA7DB /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE; path = Superres/LICENSE; sourceTree = SOURCE_ROOT; };
 		041D7F942B81ED60006BA794 /* Upscaler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upscaler.swift; sourceTree = "<group>"; };
 		0422B5792B76D13B0054A6B0 /* Superres.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Superres.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0422B57C2B76D13B0054A6B0 /* SuperresApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperresApp.swift; sourceTree = "<group>"; };
@@ -75,6 +74,7 @@
 		046611342B9A448D003FCB02 /* ValueTextStyleModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueTextStyleModifier.swift; sourceTree = "<group>"; };
 		047C09642B91EBEA0023EF37 /* CGImage+CVPixelBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGImage+CVPixelBuffer.swift"; sourceTree = "<group>"; };
 		047C09682B9244350023EF37 /* AcknowledgementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementsView.swift; sourceTree = "<group>"; };
+		04AE96AA2BAAE5BB000D510F /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		04C377462B8EBA4900AFDDEF /* HeadingTextStyleModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadingTextStyleModifier.swift; sourceTree = "<group>"; };
 		04C377482B8EBB7C00AFDDEF /* TextStyleModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextStyleModifier.swift; sourceTree = "<group>"; };
 		04D529B62BA0F5F400680D86 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
@@ -118,6 +118,7 @@
 		0422B5702B76D13B0054A6B0 = {
 			isa = PBXGroup;
 			children = (
+				04AE96AA2BAAE5BB000D510F /* LICENSE */,
 				04057CF52BA80D07004AA7DB /* README.md */,
 				04057CF72BA810F3004AA7DB /* Docs */,
 				0422B57B2B76D13B0054A6B0 /* Superres */,
@@ -140,7 +141,6 @@
 		0422B57B2B76D13B0054A6B0 /* Superres */ = {
 			isa = PBXGroup;
 			children = (
-				04057CF92BA829BD004AA7DB /* LICENSE */,
 				04057CFB2BA83108004AA7DB /* Preview Content */,
 				0422B5802B76D13D0054A6B0 /* Assets.xcassets */,
 				0422B5852B76D13D0054A6B0 /* Superres.entitlements */,
@@ -334,9 +334,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04057CFA2BA829BD004AA7DB /* LICENSE in Resources */,
 				0422B5842B76D13D0054A6B0 /* Preview Assets.xcassets in Resources */,
 				046611332B9A3DD8003FCB02 /* Credits.rtf in Resources */,
+				04AE96AB2BAAE5BB000D510F /* LICENSE in Resources */,
 				04057CF82BA810F3004AA7DB /* Docs in Resources */,
 				04057CF62BA80D07004AA7DB /* README.md in Resources */,
 				0422B5812B76D13D0054A6B0 /* Assets.xcassets in Resources */,
