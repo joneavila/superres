@@ -7,7 +7,8 @@ final class ContentViewModel: ObservableObject {
     @Published var outputFolderUrl: URL?
     @Published var outputFolderDisplayPath = ""
     @Published var isUpscaling = false
-    @Published var showAlert = false
+    @Published var alertIsPresented = false
+    @Published var alertTitle = ""
     @Published var alertMessage = ""
     @Published var automaticallySave = false
     @Published var showSuccessMessage = false
@@ -52,15 +53,16 @@ final class ContentViewModel: ObservableObject {
             } catch {
                 await MainActor.run {
                     self.isUpscaling = false
-                    showError(error)
+                    displayAlert(title: "Error", message: error.localizedDescription)
                 }
             }
         }
     }
 
-    private func showError(_ error: Error) {
-        alertMessage = error.localizedDescription
-        showAlert = true
+    private func displayAlert(title: String, message: String) {
+        alertTitle = title
+        alertMessage = message
+        alertIsPresented = true
     }
 
     func saveUpscaledImageToOutputFolder() {
@@ -76,7 +78,7 @@ final class ContentViewModel: ObservableObject {
                 try saveUpscaledImage(to: upscaledImageUrl)
                 triggerSuccessMessage()
             } catch {
-                showError(error)
+                displayAlert(title: "Error", message: error.localizedDescription)
             }
         }
     }
@@ -111,7 +113,7 @@ final class ContentViewModel: ObservableObject {
             do {
                 try saveUpscaledImage(to: url)
             } catch {
-                showError(error)
+                displayAlert(title: "Error", message: error.localizedDescription)
             }
         }
     }
@@ -155,22 +157,22 @@ final class ContentViewModel: ObservableObject {
         }
         _ = provider.loadObject(ofClass: URL.self) { url, _ in
             DispatchQueue.main.async {
-                guard let fileUrl = url, fileUrl.isFileURL else {
-                    return
-                }
-                let fileExtension = fileUrl.pathExtension.lowercased()
-
-                guard fileExtension == "png" || fileExtension == "jpg" || fileExtension == "jpeg" else {
-                    self.alertMessage = "Unsupported file type."
-                    self.showAlert = true
+                guard let url = url else {
                     return
                 }
 
-                guard let nsImage = NSImage(contentsOf: fileUrl) else {
+                let allowedExtensions = ["png", "jpeg", "jpg"]
+                let fileExtension = url.pathExtension.lowercased()
+                if !allowedExtensions.contains(fileExtension) {
+                    self.displayAlert(title: "Unsupported format", message: "Supported formats: \(allowedExtensions.map { $0.uppercased() }.joined(separator: ", "))")
+                    return
+                }
+
+                guard let nsImage = NSImage(contentsOf: url) else {
                     return
                 }
                 self.originalImage = nsImage
-                self.originalImageUrl = fileUrl
+                self.originalImageUrl = url
             }
         }
         upscaledImage = nil

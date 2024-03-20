@@ -120,7 +120,7 @@ struct ContentView: View {
         .onDrop(of: [.fileURL], isTargeted: nil) { providers in
             viewModel.handleDropOfImage(providers: providers)
         }
-        .alert("Error", isPresented: $viewModel.showAlert) {
+        .alert(viewModel.alertTitle, isPresented: $viewModel.alertIsPresented) {
             Button("OK") {}
         } message: {
             Text(viewModel.alertMessage)
