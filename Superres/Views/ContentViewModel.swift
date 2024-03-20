@@ -5,7 +5,6 @@ final class ContentViewModel: ObservableObject {
     @Published var upscaledImage: NSImage? = nil
     @Published var originalImage: NSImage? = nil
     @Published var originalImageUrl: URL?
-    @Published var outputFolderUrl: URL?
     @Published var outputFolderDisplayPath = ""
     @Published var isUpscaling = false
     @Published var alertIsPresented = false
@@ -13,24 +12,19 @@ final class ContentViewModel: ObservableObject {
     @Published var alertMessage = ""
     @Published var automaticallySave = false
     @Published var showSuccessMessage = false
+    private var outputFolderUrl: URL?
 
     private let supportedImageTypes: [UTType] = [.bmp, .gif, .jpeg, .png, .tiff]
 
     init() {
-        outputFolderUrl = getDownloadsFolder()
-        if let outputFolderUrl = outputFolderUrl {
-            outputFolderDisplayPath = urlToDisplayPath(url: outputFolderUrl)
+        // Set the default output folder to the Downloads directory
+        self.outputFolderUrl = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first
+        if let outputFolderUrl = self.outputFolderUrl {
+            self.outputFolderDisplayPath = urlToDisplayPath(outputFolderUrl)
         }
     }
 
-    func getDownloadsFolder() -> URL? {
-        if let downloadsUrl = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first {
-            return downloadsUrl
-        }
-        return nil
-    }
-
-    func urlToDisplayPath(url: URL) -> String {
+    func urlToDisplayPath(_ url: URL) -> String {
         let homeDirectory = FileManager.default.homeDirectoryForCurrentUser.path
         return url.path.replacingOccurrences(of: homeDirectory, with: "~")
     }
@@ -69,7 +63,7 @@ final class ContentViewModel: ObservableObject {
     }
 
     func saveUpscaledImageToOutputFolder() {
-        guard let originalImageUrl = originalImageUrl, let outputFolderUrl = outputFolderUrl else {
+        guard let originalImageUrl = self.originalImageUrl, let outputFolderUrl = self.outputFolderUrl else {
             return
         }
         Task {
@@ -214,7 +208,8 @@ final class ContentViewModel: ObservableObject {
         panel.canChooseFiles = false
         panel.canCreateDirectories = true
         if panel.runModal() == .OK, let url = panel.url {
-            outputFolderUrl = url
+            self.outputFolderUrl = url
+            self.outputFolderDisplayPath = urlToDisplayPath(url)
         }
     }
 
