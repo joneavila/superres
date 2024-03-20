@@ -175,7 +175,7 @@ struct SpinnerView: View {
 }
 
 #Preview("ImageView") {
-    ImageView(image: NSImage(named: "ComicImage")!)
+    ImageView(image: NSImage(named: "Butterfly256x171")!)
 }
 
 #Preview("SpinnerView") {
