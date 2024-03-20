@@ -1,6 +1,5 @@
 import AppKit
-import CoreGraphics
-import CoreML
+import Vision
 
 enum UpscaleError: Error {
     case generic(String)
@@ -13,22 +12,6 @@ extension UpscaleError: LocalizedError {
             return NSLocalizedString(message, comment: "")
         }
     }
-}
-
-func upscaleImage(image: CGImage, model: RealESRGAN) throws -> CGImage {
-    guard let pixelBuffer = image.pixelBuffer() else {
-        throw UpscaleError.generic("Error converting CGImage to CVPixelBuffer.")
-    }
-
-    guard let prediction = try? model.prediction(input: pixelBuffer) else {
-        throw UpscaleError.generic("Error making model prediction.")
-    }
-
-    guard let cgImageUpscaled = CGImage.create(pixelBuffer: prediction.activation_out) else {
-        throw UpscaleError.generic("Error converting CVPixelBuffer to CGImage.")
-    }
-
-    return cgImageUpscaled
 }
 
 func roundUpToNextMultiple(_ n: Int, multipleOf: Int) -> Int {
@@ -69,8 +52,7 @@ func padImageToTile(_ image: CGImage, tileSize: Int) throws -> CGImage {
 }
 
 func tileUpscaleImage(image: CGImage) throws -> CGImage {
-    let modelConfig = MLModelConfiguration()
-    guard let model = try? RealESRGAN(configuration: modelConfig) else {
+    guard let visionModel = try? VNCoreMLModel(for: RealESRGAN(configuration: MLModelConfiguration()).model) else {
         throw UpscaleError.generic("Error loading model.")
     }
 
@@ -107,29 +89,41 @@ func tileUpscaleImage(image: CGImage) throws -> CGImage {
 
     for x in 0 ..< horizontalTiles {
         for y in 0 ..< verticalTiles {
-            let tileRect = CGRect(x: x * tileSize, y: y * tileSize, width: tileSize, height: tileSize)
-            guard let tile = paddedImage.cropping(to: tileRect) else {
-                throw UpscaleError.generic("Error cropping image to tile.")
+            let request = VNCoreMLRequest(model: visionModel) { request, _ in
+                if let observations = request.results as? [VNPixelBufferObservation] {
+                    if let pixelBuffer = observations.first?.pixelBuffer {
+                        let ciImage = CIImage(cvImageBuffer: pixelBuffer)
+                        if let cgImage = CIContext().createCGImage(ciImage, from: ciImage.extent) {
+                            // Draw the upscaled tile into the context
+                            context?.draw(cgImage, in: CGRect(x: x * upscaledTileSize,
+                                                              y: y * upscaledTileSize,
+                                                              width: cgImage.width,
+                                                              height: cgImage.height))
+                        }
+                    }
+                }
             }
-            let tileUpscaled = try upscaleImage(image: tile, model: model)
 
-            // The y-coordinate is calculated as if the origin if at the top-left
-            context?.draw(tileUpscaled, in: CGRect(x: x * upscaledTileSize,
-                                                   y: (verticalTiles - y - 1) * upscaledTileSize,
-                                                   width: tileUpscaled.width,
-                                                   height: tileUpscaled.height))
+            // Normalize the region of interest to the dimensions of the image
+            let regionX = Double(x * tileSize) / Double(paddedWidth)
+            let regionY = Double(y * tileSize) / Double(paddedHeight)
+            let regionWidth = Double(tileSize) / Double(paddedWidth)
+            let regionHeight = Double(tileSize) / Double(paddedHeight)
+            request.regionOfInterest = CGRect(x: regionX, y: regionY, width: regionWidth, height: regionHeight)
+
+            let handler = VNImageRequestHandler(cgImage: paddedImage)
+            try? handler.perform([request])
         }
     }
 
-    // Combine processed tiles into a single image
     let upscaledPaddedImage = context?.makeImage()
 
-    // Crop the padding to get the final upscaled image
+    // Crop the padded upscaled image to get the final upscaled image
     guard let upscaledImage = upscaledPaddedImage?.cropping(to: CGRect(x: 0,
                                                                        y: paddedUpscaledHeight - upscaledHeight,
                                                                        width: upscaledWidth,
-                                                                       height: upscaledHeight)
-    ) else {
+                                                                       height: upscaledHeight))
+    else {
         throw UpscaleError.generic("Error cropping padded upscaled image.")
     }
 

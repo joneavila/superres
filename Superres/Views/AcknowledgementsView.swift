@@ -21,14 +21,6 @@ struct AcknowledgementsView: View {
             licenseUrl: nil
         ),
         Resource(
-            name: "CoreMLHelpers",
-            url: URL(string: "https://github.com/hollance/CoreMLHelpers")!,
-            description: "Conversion between CGImage and CVPixelBuffer",
-            author: "Matthijs Hollemans",
-            license: "MIT License",
-            licenseUrl: URL(string: "https://github.com/hollance/CoreMLHelpers?tab=MIT-1-ov-file")!
-        ),
-        Resource(
             name: "Minimal",
             url: URL(string: "https://github.com/kepano/obsidian-minimal")!,
             description: "Color scheme",

@@ -148,7 +148,7 @@ final class ContentViewModel: ObservableObject {
                 return .png
             }
         }()
-        
+
         guard let data = bitmapImage.representation(using: bitmapType, properties: [:]) else {
             throw UpscaleError.generic("Error reading image data as \(pathExtension) format.")
         }
