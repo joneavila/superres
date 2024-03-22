@@ -43,9 +43,7 @@ struct ContentView: View {
                 Spacer()
 
                 Button("Upscale") {
-                    Task {
-                        await viewModel.upscaleImages()
-                    }
+                    viewModel.upscaleImages()
                 }
 
                 .buttonStyle(CustomButtonStyle(isProminent: true, useMaxWidth: true))

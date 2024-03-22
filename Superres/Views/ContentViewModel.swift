@@ -31,47 +31,49 @@ final class ContentViewModel: ObservableObject {
         return url.path.replacingOccurrences(of: homeDirectory, with: "~")
     }
 
-    func upscaleImages() async {
+    func upscaleImages() {
         isWorking = true
-        var savedAtLeastOneImage = false
-        
-        await withTaskGroup(of: Bool.self) { group in
-            for index in imageStates.indices where imageStates[index].upscaledImage == nil {
-                imageStates[index].isUpscaling = true
-                group.addTask {
-                    do {
-                        let upscaledImageData = try await upscale(self.imageStates[index].originalImageUrl)
-                        await MainActor.run {
-                            self.imageStates[index].isUpscaling = false
-                            self.imageStates[index].upscaledImage = NSImage(data: upscaledImageData!)
-                        }
-                        if self.automaticallySave, let outputFolderUrl = self.outputFolderUrl {
-                            try await MainActor.run {
-                                try self.imageStates[index].saveUpscaledImageToFolder(folderUrl: outputFolderUrl)
-                            }
-                            return true // Image was saved.
-                        }
-                    } catch {
-                        await MainActor.run {
-                            self.imageStates[index].isUpscaling = false
-                            self.displayAlert(title: "Error", message: error.localizedDescription)
-                        }
-                    }
-                    return false // Image was not saved.
-                }
-            }
-            
-            // Aggregate results.
-            for await didSaveImage in group {
-                if didSaveImage {
-                    savedAtLeastOneImage = true
-                }
-            }
+
+        for index in imageStates.indices where imageStates[index].upscaledImage == nil {
+            self.imageStates[index].isUpscaling = true
         }
 
-        isWorking = false
-        if savedAtLeastOneImage {
-            triggerSuccessMessage()
+        Task {
+            let saveImageSuccess = await withTaskGroup(of: Bool.self) { group -> Bool in
+                for index in self.imageStates.indices where self.imageStates[index].upscaledImage == nil {
+                    group.addTask {
+                        do {
+                            let upscaledImageData = try await upscale(self.imageStates[index].originalImageUrl)
+                            try await MainActor.run {
+                                self.imageStates[index].isUpscaling = false
+                                self.imageStates[index].upscaledImage = NSImage(data: upscaledImageData!)
+                                if self.automaticallySave, let outputFolderUrl = self.outputFolderUrl {
+                                    try self.imageStates[index].saveUpscaledImageToFolder(folderUrl: outputFolderUrl)
+                                }
+                            }
+                            return true // Image was saved.
+
+                        } catch {
+                            await MainActor.run {
+                                self.imageStates[index].isUpscaling = false
+                                self.displayAlert(title: "Error", message: error.localizedDescription)
+                            }
+                        }
+                        return false // Image was not saved.
+                    }
+                }
+                return await group.contains(true)
+            }
+
+            if saveImageSuccess {
+                await MainActor.run {
+                    triggerSuccessMessage()
+                }
+            }
+
+            await MainActor.run {
+                self.isWorking = false
+            }
         }
     }
 
@@ -82,9 +84,10 @@ final class ContentViewModel: ObservableObject {
     }
 
     func triggerSuccessMessage() {
+        let messageDuration = 3.0
         DispatchQueue.main.async {
             self.showSuccessMessage = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + messageDuration) {
                 self.showSuccessMessage = false
             }
         }
