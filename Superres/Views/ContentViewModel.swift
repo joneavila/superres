@@ -92,39 +92,50 @@ final class ContentViewModel: ObservableObject {
             }
         }
     }
-
+    
     func handleDropOfImages(providers: [NSItemProvider]) -> Bool {
+        var errorMessages = [String]()
+
         for provider in providers {
             if provider.canLoadObject(ofClass: URL.self) {
                 _ = provider.loadObject(ofClass: URL.self) { url, _ in
+                    
                     DispatchQueue.main.async {
                         guard let url = url else {
                             return
                         }
-
+                        
                         guard let typeIdentifier = try? url.resourceValues(forKeys: [.typeIdentifierKey]).typeIdentifier,
                               let fileUTType = UTType(typeIdentifier)
                         else {
-                            self.displayAlert(title: "Uknown file type", message: url.path())
+                            errorMessages.append("Uknown file type: \(url.path())")
                             return
                         }
-
+                        
                         if !ImageState.supportedImageTypes.contains(fileUTType) {
-                            self.displayAlert(title: "Unsupported image type", message: url.path())
+                            errorMessages.append("Unsupported image type: \(url.path())")
                             return
                         }
-
+                        
                         guard let nsImage = NSImage(contentsOf: url) else {
-                            self.displayAlert(title: "Unable to load image", message: url.path())
+                            errorMessages.append("Unable to load image: \(url.path())")
                             return
                         }
-
+                        
                         let droppedImage = ImageState(originalImage: nsImage, originalImageUrl: url)
                         self.imageStates.append(droppedImage)
                     }
                 }
             }
         }
+
+        DispatchQueue.main.async {
+            if !errorMessages.isEmpty {
+                let message = errorMessages.joined(separator: "\n")
+                self.displayAlert(title: "Error", message: message)
+            }
+        }
+        
         return true
     }
 
