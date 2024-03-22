@@ -44,6 +44,30 @@ struct AcknowledgementsView: View {
             license: "CC BY 2.0 DEED Attribution 2.0 Generic License",
             licenseUrl: URL(string: "https://creativecommons.org/licenses/by/2.0/deed.en")!
         ),
+        Resource(
+            name: "Siberian Tiger",
+            url: URL(string: "https://commons.wikimedia.org/wiki/File:Siberischer_tiger_de_edit02.jpg")!,
+            description: "Preview Assets image",
+            author: "S. Taheri",
+            license: "CC BY-SA 2.5 DEED Attribution-ShareAlike 2.5 Generic",
+            licenseUrl: URL(string: "https://creativecommons.org/licenses/by-sa/2.5/deed.en")!
+        ),
+        Resource(
+            name: "Kuha Karuhas Royal Pavilion",
+            url: URL(string: "https://commons.wikimedia.org/wiki/File:01-พระที่นั่งคูหาคฤหาสน์.jpg")!,
+            description: "Preview Assets image",
+            author: "BerryJ",
+            license: "CC BY-SA 4.0 DEED Attribution-ShareAlike 4.0 International",
+            licenseUrl: URL(string: "https://creativecommons.org/licenses/by-sa/4.0/deed.en")!
+        ),
+        Resource(
+            name: "Aulacophora Indica",
+            url: URL(string: "https://commons.wikimedia.org/wiki/File:The_Bug_Peek.jpg")!,
+            description: "Preview Assets image",
+            author: "Mildeep",
+            license: "CC BY-SA 4.0 DEED CC BY-SA 4.0 DEED",
+            licenseUrl: URL(string: "https://creativecommons.org/licenses/by-sa/4.0/deed.en")!
+        ),
     ]
 
     var body: some View {
