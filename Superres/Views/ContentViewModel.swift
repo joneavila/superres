@@ -31,36 +31,48 @@ final class ContentViewModel: ObservableObject {
         return url.path.replacingOccurrences(of: homeDirectory, with: "~")
     }
 
-    func upscaleImages() {
+    func upscaleImages() async {
         isWorking = true
-        for index in imageStates.indices {
-            if imageStates[index].upscaledImage != nil {
-                continue
-            }
-
-            imageStates[index].isUpscaling = true
-            Task {
-                do {
-                    let upscaledImageData = try await upscale(self.imageStates[index].originalImageUrl)
-                    try await MainActor.run {
-                        self.imageStates[index].isUpscaling = false
-                        let upscaledImage = NSImage(data: upscaledImageData!)
-                        self.imageStates[index].upscaledImage = upscaledImage
-
-                        if self.automaticallySave, let outputFolderUrl = outputFolderUrl {
-                            try self.imageStates[index].saveUpscaledImageToFolder(folderUrl: outputFolderUrl)
-                            triggerSuccessMessage()
+        var savedAtLeastOneImage = false
+        
+        await withTaskGroup(of: Bool.self) { group in
+            for index in imageStates.indices where imageStates[index].upscaledImage == nil {
+                imageStates[index].isUpscaling = true
+                group.addTask {
+                    do {
+                        let upscaledImageData = try await upscale(self.imageStates[index].originalImageUrl)
+                        await MainActor.run {
+                            self.imageStates[index].isUpscaling = false
+                            self.imageStates[index].upscaledImage = NSImage(data: upscaledImageData!)
+                        }
+                        if self.automaticallySave, let outputFolderUrl = self.outputFolderUrl {
+                            try await MainActor.run {
+                                try self.imageStates[index].saveUpscaledImageToFolder(folderUrl: outputFolderUrl)
+                            }
+                            return true // Image was saved.
+                        }
+                    } catch {
+                        await MainActor.run {
+                            self.imageStates[index].isUpscaling = false
+                            self.displayAlert(title: "Error", message: error.localizedDescription)
                         }
                     }
-                } catch {
-                    await MainActor.run {
-                        self.imageStates[index].isUpscaling = false
-                        displayAlert(title: "Error", message: error.localizedDescription)
-                    }
+                    return false // Image was not saved.
+                }
+            }
+            
+            // Aggregate results.
+            for await didSaveImage in group {
+                if didSaveImage {
+                    savedAtLeastOneImage = true
                 }
             }
         }
+
         isWorking = false
+        if savedAtLeastOneImage {
+            triggerSuccessMessage()
+        }
     }
 
     private func displayAlert(title: String, message: String) {

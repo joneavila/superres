@@ -43,7 +43,9 @@ struct ContentView: View {
                 Spacer()
 
                 Button("Upscale") {
-                    viewModel.upscaleImages()
+                    Task {
+                        await viewModel.upscaleImages()
+                    }
                 }
 
                 .buttonStyle(CustomButtonStyle(isProminent: true, useMaxWidth: true))
@@ -90,7 +92,7 @@ struct ContentView: View {
                 // Image saved message
                 VStack {
                     Spacer()
-                    Text("Image saved")
+                    Text("Images automatically saved")
                         .textStyle()
                         .padding(8)
                         .background(
