@@ -2,13 +2,14 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var viewModel = ContentViewModel()
+    @State private var selectedImageState: ImageState?
 
     var body: some View {
         HStack(spacing: 0) {
             // Controls
             VStack(alignment: .leading) {
-                Button("Select Image") {
-                    viewModel.selectImage()
+                Button("Select Images") {
+                    viewModel.selectImages()
                 }
                 .buttonStyle(CustomButtonStyle(useMaxWidth: true))
 
@@ -42,59 +43,48 @@ struct ContentView: View {
                 Spacer()
 
                 Button("Upscale") {
-                    viewModel.upscaleImage()
+                    viewModel.upscaleImages()
                 }
 
                 .buttonStyle(CustomButtonStyle(isProminent: true, useMaxWidth: true))
-                .disabled(viewModel.originalImage == nil)
+                .disabled(!viewModel.imagesNeedUpscaling)
             }
             .padding()
             .frame(width: 200, alignment: .leading)
             .background(Color("BgColor"))
-            .disabled(viewModel.isUpscaling)
+            .disabled(viewModel.isWorking)
 
-            // Divider
-            Rectangle()
-                .fill(Color("BgDividerColor"))
-                .frame(width: 1)
-                .ignoresSafeArea()
+            DividerView()
 
             // Image view
             ZStack {
                 Color("BgDimColor")
-                if let originalImage = viewModel.originalImage, let upscaledImage = viewModel.upscaledImage {
-                    ImageCompareView(
-                        beforeImage: originalImage,
-                        afterImage: upscaledImage
-                    )
-                    .padding(.horizontal, 28)
-                } else if let originalImage = viewModel.originalImage {
-                    ImageView(image: originalImage)
-                        .padding(.horizontal, 28)
-                } else {
+                if viewModel.imageStates.isEmpty {
                     ImagePlaceholderView()
                         .padding()
-                }
-                if viewModel.isUpscaling {
-                    SpinnerView()
-                }
 
-                // Save button
-                if viewModel.upscaledImage != nil {
-                    VStack {
-                        Spacer()
-                        HStack {
-                            Spacer()
-                            Button {
-                                viewModel.saveUpscaledImageToLocation()
-                            } label: {
-                                Image(systemName: "arrow.down.to.line")
-                                    .bold()
+                } else {
+                    GeometryReader { geometry in
+                        ScrollView {
+                            let width = geometry.size.width
+                            let imageWidth = 200.0
+                            let imageHeight = 150.0
+                            let numberOfColumns = Int(width / imageWidth)
+                            let columns = Array(repeating: GridItem(.flexible(), spacing: 0), count: max(numberOfColumns, 1))
+                            LazyVGrid(columns: columns, spacing: 20) {
+                                ForEach(viewModel.imageStates.indices, id: \.self) {
+                                    index in
+                                    ImageView(imageState: viewModel.imageStates[index])
+                                        .frame(height: imageHeight)
+                                        .padding(.horizontal, 10)
+                                        .onTapGesture {
+                                            selectedImageState = viewModel.imageStates[index]
+                                        }
+                                }
                             }
-                            .buttonStyle(CustomButtonStyle())
                         }
+                        .padding(18)
                     }
-                    .padding(.horizontal, 14)
                 }
 
                 // Image saved message
@@ -116,9 +106,31 @@ struct ContentView: View {
             .padding(.vertical, 16)
             .background(Color("BgDimColor"))
             .ignoresSafeArea()
+
+            if let selectedImage = selectedImageState, let upscaledImage = selectedImage.upscaledImage {
+                DividerView()
+                ZStack {
+                    Color("BgColor")
+                        .ignoresSafeArea()
+                    VStack {
+                        ImageCompareView(beforeImage: selectedImage.originalImage, afterImage: upscaledImage)
+                            .padding(.horizontal, 20)
+                        Button("Save Image") {
+                            do {
+                                try selectedImage.saveUpscaledImageToLocation()
+                            } catch {
+                                // TODO:
+                            }
+                        }
+                        .buttonStyle(CustomButtonStyle())
+                    }
+                    .padding()
+                }
+            }
         }
+
         .onDrop(of: [.fileURL], isTargeted: nil) { providers in
-            viewModel.handleDropOfImage(providers: providers)
+            viewModel.handleDropOfImages(providers: providers)
         }
         .alert(viewModel.alertTitle, isPresented: $viewModel.alertIsPresented) {
             Button("OK") {}
@@ -142,14 +154,12 @@ struct ImagePlaceholderView: View {
     }
 }
 
-struct ImageView: View {
-    let image: NSImage
-
+struct DividerView: View {
     var body: some View {
-        Image(nsImage: image)
-            .resizable()
-            .scaledToFit()
-            .cornerRadius(6)
+        Rectangle()
+            .fill(Color("BgDividerColor"))
+            .frame(width: 1)
+            .ignoresSafeArea()
     }
 }
 
@@ -172,10 +182,6 @@ struct SpinnerView: View {
 
 #Preview("ImagePlaceholderView") {
     ImagePlaceholderView()
-}
-
-#Preview("ImageView") {
-    ImageView(image: NSImage(named: "Butterfly256x171")!)
 }
 
 #Preview("SpinnerView") {

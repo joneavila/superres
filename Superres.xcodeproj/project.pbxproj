@@ -10,7 +10,7 @@
 		04057CF42BA7F9A2004AA7DB /* RealESRGAN.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 04057CF32BA7F9A2004AA7DB /* RealESRGAN.mlpackage */; };
 		04057CF62BA80D07004AA7DB /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 04057CF52BA80D07004AA7DB /* README.md */; };
 		04057CF82BA810F3004AA7DB /* Docs in Resources */ = {isa = PBXBuildFile; fileRef = 04057CF72BA810F3004AA7DB /* Docs */; };
-		041D7F952B81ED60006BA794 /* Upscaler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041D7F942B81ED60006BA794 /* Upscaler.swift */; };
+		041D7F952B81ED60006BA794 /* Upscale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041D7F942B81ED60006BA794 /* Upscale.swift */; };
 		0422B57D2B76D13B0054A6B0 /* SuperresApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0422B57C2B76D13B0054A6B0 /* SuperresApp.swift */; };
 		0422B57F2B76D13B0054A6B0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0422B57E2B76D13B0054A6B0 /* ContentView.swift */; };
 		0422B5812B76D13D0054A6B0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0422B5802B76D13D0054A6B0 /* Assets.xcassets */; };
@@ -23,6 +23,8 @@
 		042FDF912B9F9A4C00A68297 /* SubtextStyleModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042FDF902B9F9A4C00A68297 /* SubtextStyleModifier.swift */; };
 		046611332B9A3DD8003FCB02 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 046611322B9A3DD8003FCB02 /* Credits.rtf */; };
 		046611352B9A448D003FCB02 /* ValueTextStyleModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046611342B9A448D003FCB02 /* ValueTextStyleModifier.swift */; };
+		0475394C2BAD508F00092969 /* ImageState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0475394B2BAD508F00092969 /* ImageState.swift */; };
+		0475394E2BADB57600092969 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0475394D2BADB57600092969 /* ImageView.swift */; };
 		047C09692B9244350023EF37 /* AcknowledgementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047C09682B9244350023EF37 /* AcknowledgementsView.swift */; };
 		04AE96AB2BAAE5BB000D510F /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 04AE96AA2BAAE5BB000D510F /* LICENSE */; };
 		04C377472B8EBA4900AFDDEF /* HeadingTextStyleModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C377462B8EBA4900AFDDEF /* HeadingTextStyleModifier.swift */; };
@@ -53,7 +55,7 @@
 		04057CF32BA7F9A2004AA7DB /* RealESRGAN.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = RealESRGAN.mlpackage; sourceTree = "<group>"; };
 		04057CF52BA80D07004AA7DB /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		04057CF72BA810F3004AA7DB /* Docs */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Docs; sourceTree = "<group>"; };
-		041D7F942B81ED60006BA794 /* Upscaler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upscaler.swift; sourceTree = "<group>"; };
+		041D7F942B81ED60006BA794 /* Upscale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Upscale.swift; sourceTree = "<group>"; };
 		0422B5792B76D13B0054A6B0 /* Superres.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Superres.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0422B57C2B76D13B0054A6B0 /* SuperresApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperresApp.swift; sourceTree = "<group>"; };
 		0422B57E2B76D13B0054A6B0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -71,6 +73,8 @@
 		042FDF902B9F9A4C00A68297 /* SubtextStyleModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtextStyleModifier.swift; sourceTree = "<group>"; };
 		046611322B9A3DD8003FCB02 /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Credits.rtf; sourceTree = "<group>"; };
 		046611342B9A448D003FCB02 /* ValueTextStyleModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueTextStyleModifier.swift; sourceTree = "<group>"; };
+		0475394B2BAD508F00092969 /* ImageState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageState.swift; sourceTree = "<group>"; };
+		0475394D2BADB57600092969 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		047C09682B9244350023EF37 /* AcknowledgementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementsView.swift; sourceTree = "<group>"; };
 		04AE96AA2BAAE5BB000D510F /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		04C377462B8EBA4900AFDDEF /* HeadingTextStyleModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadingTextStyleModifier.swift; sourceTree = "<group>"; };
@@ -176,6 +180,7 @@
 				04D529B62BA0F5F400680D86 /* ContentViewModel.swift */,
 				047C09682B9244350023EF37 /* AcknowledgementsView.swift */,
 				04F38A662B869653003429BE /* ImageCompareView.swift */,
+				0475394D2BADB57600092969 /* ImageView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -200,7 +205,8 @@
 		046B482C2BA76A90006ED02A /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				041D7F942B81ED60006BA794 /* Upscaler.swift */,
+				041D7F942B81ED60006BA794 /* Upscale.swift */,
+				0475394B2BAD508F00092969 /* ImageState.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -360,13 +366,15 @@
 				04C377472B8EBA4900AFDDEF /* HeadingTextStyleModifier.swift in Sources */,
 				0422B57D2B76D13B0054A6B0 /* SuperresApp.swift in Sources */,
 				047C09692B9244350023EF37 /* AcknowledgementsView.swift in Sources */,
-				041D7F952B81ED60006BA794 /* Upscaler.swift in Sources */,
+				041D7F952B81ED60006BA794 /* Upscale.swift in Sources */,
+				0475394E2BADB57600092969 /* ImageView.swift in Sources */,
 				04C377492B8EBB7C00AFDDEF /* TextStyleModifier.swift in Sources */,
 				042FDF912B9F9A4C00A68297 /* SubtextStyleModifier.swift in Sources */,
 				04057CF42BA7F9A2004AA7DB /* RealESRGAN.mlpackage in Sources */,
 				04F38A672B869653003429BE /* ImageCompareView.swift in Sources */,
 				04D529B92BA0F75E00680D86 /* CustomButtonStyle.swift in Sources */,
 				042FDF8F2B9F963600A68297 /* SubheadingTextStyleModifier.swift in Sources */,
+				0475394C2BAD508F00092969 /* ImageState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -529,38 +537,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Superres/Superres.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_ASSET_PATHS = "\"Superres/Resources\"";
-				DEVELOPMENT_TEAM = 7A6RN5NLM4;
-				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "";
-				INFOPLIST_KEY_CFBundleDisplayName = Superres;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				MARKETING_VERSION = 1.1;
-				PRODUCT_BUNDLE_IDENTIFIER = dev.jonavila.superres;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		0422B5A02B76D13D0054A6B0 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Superres/Superres.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -579,9 +555,42 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.jonavila.superres;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		0422B5A02B76D13D0054A6B0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Superres/Superres.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"Superres/Resources\"";
+				DEVELOPMENT_TEAM = 7A6RN5NLM4;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "";
+				INFOPLIST_KEY_CFBundleDisplayName = Superres;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.jonavila.superres;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -612,6 +621,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
@@ -649,6 +659,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;

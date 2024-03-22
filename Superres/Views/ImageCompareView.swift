@@ -23,12 +23,12 @@ struct ImageCompareView: View {
                 Image(nsImage: afterImage)
                     .resizable()
                     .scaledToFit()
-                    .cornerRadius(6)
+                    .cornerRadius(8)
 
                 Image(nsImage: beforeImage)
                     .resizable()
                     .scaledToFit()
-                    .cornerRadius(6)
+                    .cornerRadius(8)
                     .frame(
                         width: proxy.frame(in: .global).width,
                         height: proxy.frame(in: .global).height
