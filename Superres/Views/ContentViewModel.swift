@@ -14,7 +14,7 @@ final class ContentViewModel: ObservableObject {
     @Published var alertMessage = ""
     @Published var automaticallySave = false
     @Published var showSuccessMessage = false
-    @Published var isWorking = false
+    @Published var isUpscaling = false
     @Published var imagesNeedUpscaling: Bool = false
     private var outputFolderUrl: URL?
 
@@ -30,50 +30,66 @@ final class ContentViewModel: ObservableObject {
         let homeDirectory = FileManager.default.homeDirectoryForCurrentUser.path
         return url.path.replacingOccurrences(of: homeDirectory, with: "~")
     }
+    
+    /// Upscale images asynchronously.
+    @MainActor
+    func upscaleImages() async {
+        isUpscaling = true
+        
+        var taskResults: [(String?, Bool)] = []
+        
+        // Create a task group to execute upscaling tasks concurrently. The task result is a tuple of an optional string (an error description if upscaling fails) and a boolean (whether the upscaled image was automatically saved).
+        await withTaskGroup(of: (String?, Bool).self) { group in
 
-    func upscaleImages() {
-        isWorking = true
-
-        for index in imageStates.indices where imageStates[index].upscaledImage == nil {
-            self.imageStates[index].isUpscaling = true
-        }
-
-        Task {
-            let saveImageSuccess = await withTaskGroup(of: Bool.self) { group -> Bool in
-                for index in self.imageStates.indices where self.imageStates[index].upscaledImage == nil {
-                    group.addTask {
-                        do {
-                            let upscaledImageData = try await upscale(self.imageStates[index].originalImageUrl)
-                            try await MainActor.run {
-                                self.imageStates[index].isUpscaling = false
-                                self.imageStates[index].upscaledImage = NSImage(data: upscaledImageData!)
-                                if self.automaticallySave, let outputFolderUrl = self.outputFolderUrl {
-                                    try self.imageStates[index].saveUpscaledImageToFolder(folderUrl: outputFolderUrl)
-                                }
-                            }
-                            return true // Image was saved.
-
-                        } catch {
-                            await MainActor.run {
-                                self.imageStates[index].isUpscaling = false
-                                self.displayAlert(title: "Error", message: error.localizedDescription)
-                            }
+            // Process images that have not been upscaled.
+            for index in imageStates.indices where imageStates[index].upscaledImage == nil {
+                group.addTask {
+                    do {
+                        await MainActor.run {
+                            self.imageStates[index].isUpscaling = true
                         }
-                        return false // Image was not saved.
+                        
+                        let upscaledImageData = try await upscale(self.imageStates[index].originalImageUrl)
+                        
+                        await MainActor.run {
+                            self.imageStates[index].upscaledImage = NSImage(data: upscaledImageData!)
+                            self.imageStates[index].isUpscaling = false
+                        }
+                        
+                        if self.automaticallySave, let outputFolderUrl = self.outputFolderUrl {
+                            try self.imageStates[index].saveUpscaledImageToFolder(folderUrl: outputFolderUrl)
+                            return (nil, true)
+                        }
+                        
+                        return (nil, false)
+                    } catch {
+                        await MainActor.run {
+                            self.imageStates[index].isUpscaling = false
+                        }
+                        return ("Error upscaling image \(self.imageStates[index].originalImageUrl): \(error.localizedDescription)", false)
                     }
                 }
-                return await group.contains(true)
             }
-
-            if saveImageSuccess {
-                await MainActor.run {
-                    triggerSuccessMessage()
-                }
+            
+            // Collect results once all tasks have completed.
+            for await result in group {
+                taskResults.append(result)
             }
-
-            await MainActor.run {
-                self.isWorking = false
-            }
+        }
+        
+        isUpscaling = false
+        
+        // Display any error messages in a single alert.
+        let errorMessages = taskResults.compactMap { $0.0 }
+        if !errorMessages.isEmpty {
+            let errorMessage = errorMessages.joined(separator: "\n")
+            displayAlert(title: "Error", message: errorMessage)
+        }
+        
+        // Display success message if any upscaled images where saved.
+        let imageWasSaved = taskResults.contains { $0.1 }
+        if imageWasSaved {
+            triggerSuccessMessage()
         }
     }
 
@@ -93,18 +109,27 @@ final class ContentViewModel: ObservableObject {
         }
     }
     
+    /// Handles the drop of images onto the application.
+    /// - Parameter providers: An array of `NSItemProvider` objects representing the dropped items.
+    /// - Returns: `true` if the drop was handled successfully, `false` otherwise.
     func handleDropOfImages(providers: [NSItemProvider]) -> Bool {
         var errorMessages = [String]()
 
         for provider in providers {
             if provider.canLoadObject(ofClass: URL.self) {
-                _ = provider.loadObject(ofClass: URL.self) { url, _ in
+                _ = provider.loadObject(ofClass: URL.self) { url, error in
                     
                     DispatchQueue.main.async {
+                        if let error = error {
+                            errorMessages.append("Error loading URL: \(error.localizedDescription)")
+                            return
+                        }
+                        
                         guard let url = url else {
                             return
                         }
                         
+                        // Get the UTType from the URL.
                         guard let typeIdentifier = try? url.resourceValues(forKeys: [.typeIdentifierKey]).typeIdentifier,
                               let fileUTType = UTType(typeIdentifier)
                         else {
@@ -112,11 +137,13 @@ final class ContentViewModel: ObservableObject {
                             return
                         }
                         
+                        // Check if the file type is supported.
                         if !ImageState.supportedImageTypes.contains(fileUTType) {
-                            errorMessages.append("Unsupported image type: \(url.path())")
+                            errorMessages.append("Unsupported file type: \(url.path())")
                             return
                         }
                         
+                        // Load the image from the URL.
                         guard let nsImage = NSImage(contentsOf: url) else {
                             errorMessages.append("Unable to load image: \(url.path())")
                             return
@@ -130,9 +157,11 @@ final class ContentViewModel: ObservableObject {
         }
 
         DispatchQueue.main.async {
+            // Display any error messages in a single alert.
             if !errorMessages.isEmpty {
+                let title = "Error loading image\(errorMessages.count > 1 ? "s" : "")"
                 let message = errorMessages.joined(separator: "\n")
-                self.displayAlert(title: "Error", message: message)
+                self.displayAlert(title: title, message: message)
             }
         }
         

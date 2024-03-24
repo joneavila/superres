@@ -43,7 +43,9 @@ struct ContentView: View {
                 Spacer()
 
                 Button("Upscale") {
-                    viewModel.upscaleImages()
+                    Task {
+                        await viewModel.upscaleImages()
+                    }
                 }
 
                 .buttonStyle(CustomButtonStyle(isProminent: true, useMaxWidth: true))
@@ -52,7 +54,7 @@ struct ContentView: View {
             .padding()
             .frame(width: 200, alignment: .leading)
             .background(Color("BgColor"))
-            .disabled(viewModel.isWorking)
+            .disabled(viewModel.isUpscaling)
 
             DividerView()
 

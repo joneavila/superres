@@ -48,7 +48,7 @@ struct ImageState: Identifiable {
         }
     }
 
-    func saveUpscaledImage(to url: URL) throws {
+    private func saveUpscaledImage(to url: URL) throws {
         guard let upscaledImage = upscaledImage else {
             return
         }
