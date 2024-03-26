@@ -118,11 +118,7 @@ struct ContentView: View {
                         ImageCompareView(beforeImage: selectedImage.originalImage, afterImage: upscaledImage)
                             .padding(.horizontal, 20)
                         Button("Save Image") {
-                            do {
-                                try selectedImage.saveUpscaledImageToLocation()
-                            } catch {
-                                // TODO:
-                            }
+                            viewModel.saveUpscaledImageToLocation(imageState: selectedImage)
                         }
                         .buttonStyle(CustomButtonStyle())
                     }
