@@ -67,7 +67,7 @@ struct AcknowledgementsView: View {
             author: "Mildeep",
             license: "CC BY-SA 4.0 DEED CC BY-SA 4.0 DEED",
             licenseUrl: URL(string: "https://creativecommons.org/licenses/by-sa/4.0/deed.en")!
-        ),
+        )
     ]
 
     var body: some View {

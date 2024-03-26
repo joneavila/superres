@@ -107,7 +107,10 @@ struct SliderView: View {
 }
 
 #Preview("ImageCompareView") {
-    ImageCompareView(beforeImage: NSImage(named: "Butterfly256x171")!, afterImage: NSImage(named: "Butterfly4096x2731")!)
+    ImageCompareView(
+        beforeImage: NSImage(named: "Butterfly256x171")!,
+        afterImage: NSImage(named: "Butterfly4096x2731")!
+    )
 }
 
 #Preview("SliderView") {

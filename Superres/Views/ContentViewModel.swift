@@ -37,7 +37,9 @@ final class ContentViewModel: ObservableObject {
 
         var taskResults: [(String?, Bool)] = []
 
-        // Create a task group to execute upscaling tasks concurrently. The task result is a tuple of an optional string (an error description if upscaling fails) and a boolean (whether the upscaled image was automatically saved).
+        // Create a task group to execute upscaling tasks concurrently. The task result is a tuple of:
+        //  - optional string (an error description if upscaling fails)
+        //  - boolean (whether the upscaled image was automatically saved).
         await withTaskGroup(of: (String?, Bool).self) { group in
 
             // Process images that have not been upscaled.
@@ -56,7 +58,9 @@ final class ContentViewModel: ObservableObject {
                         }
 
                         if self.automaticallySave {
-                            let upscaledImageUrl = self.outputFolderUrl.appendingPathComponent(self.imageStates[index].upscaledImageFilename)
+                            let upscaledImageUrl = self.outputFolderUrl.appendingPathComponent(
+                                self.imageStates[index].upscaledImageFilename
+                            )
                             let upscaledImage = NSImage(data: upscaledImageData!)
                             try self.saveImage(nsImage: upscaledImage!, to: upscaledImageUrl)
                             return (nil, true)
@@ -67,7 +71,10 @@ final class ContentViewModel: ObservableObject {
                         await MainActor.run {
                             self.imageStates[index].isUpscaling = false
                         }
-                        return ("Error upscaling image \(self.imageStates[index].originalImageUrl): \(error.localizedDescription)", false)
+                        return (
+                            "\(self.imageStates[index].originalImageUrl): \(error.localizedDescription)",
+                            false
+                        )
                     }
                 }
             }
@@ -116,43 +123,42 @@ final class ContentViewModel: ObservableObject {
     func handleDropOfImages(providers: [NSItemProvider]) -> Bool {
         var errorMessages = [String]()
 
-        for provider in providers {
-            if provider.canLoadObject(ofClass: URL.self) {
-                _ = provider.loadObject(ofClass: URL.self) { url, error in
+        for provider in providers where provider.canLoadObject(ofClass: URL.self) {
+            _ = provider.loadObject(ofClass: URL.self) { url, error in
 
-                    DispatchQueue.main.async {
-                        if let error = error {
-                            errorMessages.append("Error loading URL: \(error.localizedDescription)")
-                            return
-                        }
-
-                        guard let url = url else {
-                            return
-                        }
-
-                        // Get the UTType from the URL.
-                        guard let typeIdentifier = try? url.resourceValues(forKeys: [.typeIdentifierKey]).typeIdentifier,
-                              let fileUTType = UTType(typeIdentifier)
-                        else {
-                            errorMessages.append("Uknown file type: \(url.path())")
-                            return
-                        }
-
-                        // Check if the file type is supported.
-                        if !self.supportedImageTypes.contains(fileUTType) {
-                            errorMessages.append("Unsupported file type: \(url.path())")
-                            return
-                        }
-
-                        // Load the image from the URL.
-                        guard let nsImage = NSImage(contentsOf: url) else {
-                            errorMessages.append("Unable to load image: \(url.path())")
-                            return
-                        }
-
-                        let droppedImage = ImageState(originalImage: nsImage, originalImageUrl: url)
-                        self.imageStates.append(droppedImage)
+                DispatchQueue.main.async {
+                    if let error = error {
+                        errorMessages.append("Error loading URL: \(error.localizedDescription)")
+                        return
                     }
+
+                    guard let url = url else {
+                        return
+                    }
+
+                    // Get the UTType from the URL.
+                    guard
+                        let typeIdentifier = try? url.resourceValues(forKeys: [.typeIdentifierKey]).typeIdentifier,
+                        let fileUTType = UTType(typeIdentifier)
+                    else {
+                        errorMessages.append("Uknown file type: \(url.path())")
+                        return
+                    }
+
+                    // Check if the file type is supported.
+                    if !self.supportedImageTypes.contains(fileUTType) {
+                        errorMessages.append("Unsupported file type: \(url.path())")
+                        return
+                    }
+
+                    // Load the image from the URL.
+                    guard let nsImage = NSImage(contentsOf: url) else {
+                        errorMessages.append("Unable to load image: \(url.path())")
+                        return
+                    }
+
+                    let droppedImage = ImageState(originalImage: nsImage, originalImageUrl: url)
+                    self.imageStates.append(droppedImage)
                 }
             }
         }

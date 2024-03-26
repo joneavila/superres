@@ -6,7 +6,7 @@ struct ImageState: Identifiable {
     let originalImage: NSImage
     let originalImageUrl: URL
     let upscaledImageFilename: String
-    var upscaledImage: NSImage? = nil
+    var upscaledImage: NSImage?
     var isUpscaling: Bool = false
 
     init(originalImage: NSImage, originalImageUrl: URL) {

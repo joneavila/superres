@@ -12,7 +12,10 @@ struct CustomToggleStyle: ToggleStyle {
                     .foregroundColor(configuration.isOn ? Color("AccentColor") : Color("ButtonColor"))
                     .overlay(
                         RoundedRectangle(cornerRadius: .infinity)
-                            .stroke(configuration.isOn ? Color("AccentOutlineColor") : Color("ButtonOutlineColor"), lineWidth: 1)
+                            .stroke(
+                                configuration.isOn ? Color("AccentOutlineColor") : Color("ButtonOutlineColor"),
+                                lineWidth: 1
+                            )
                     )
                     .animation(.easeInOut, value: configuration.isOn)
 

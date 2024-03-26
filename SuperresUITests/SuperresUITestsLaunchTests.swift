@@ -1,6 +1,6 @@
 import XCTest
 
-final class upscaler_appUITestsLaunchTests: XCTestCase {
+final class SuperresUITestsLaunchTests: XCTestCase {
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
     }

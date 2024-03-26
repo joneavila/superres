@@ -14,11 +14,11 @@ extension UpscaleError: LocalizedError {
     }
 }
 
-func roundUpToNextMultiple(_ n: Int, multipleOf: Int) -> Int {
-    if n % multipleOf == 0 {
-        return n
+func roundUpToNextMultiple(_ number: Int, multipleOf: Int) -> Int {
+    if number % multipleOf == 0 {
+        return number
     } else {
-        return ((n / multipleOf) + 1) * multipleOf
+        return ((number / multipleOf) + 1) * multipleOf
     }
 }
 
@@ -87,16 +87,16 @@ func tileUpscaleImage(image: CGImage) throws -> CGImage {
                             space: image.colorSpace ?? CGColorSpaceCreateDeviceRGB(),
                             bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
 
-    for x in 0 ..< horizontalTiles {
-        for y in 0 ..< verticalTiles {
+    for horizontalTile in 0 ..< horizontalTiles {
+        for verticalTile in 0 ..< verticalTiles {
             let request = VNCoreMLRequest(model: visionModel) { request, _ in
                 if let observations = request.results as? [VNPixelBufferObservation] {
                     if let pixelBuffer = observations.first?.pixelBuffer {
                         let ciImage = CIImage(cvImageBuffer: pixelBuffer)
                         if let cgImage = CIContext().createCGImage(ciImage, from: ciImage.extent) {
                             // Draw the upscaled tile into the context
-                            context?.draw(cgImage, in: CGRect(x: x * upscaledTileSize,
-                                                              y: y * upscaledTileSize,
+                            context?.draw(cgImage, in: CGRect(x: horizontalTile * upscaledTileSize,
+                                                              y: verticalTile * upscaledTileSize,
                                                               width: cgImage.width,
                                                               height: cgImage.height))
                         }
@@ -105,8 +105,8 @@ func tileUpscaleImage(image: CGImage) throws -> CGImage {
             }
 
             // Normalize the region of interest to the dimensions of the image
-            let regionX = Double(x * tileSize) / Double(paddedWidth)
-            let regionY = Double(y * tileSize) / Double(paddedHeight)
+            let regionX = Double(horizontalTile * tileSize) / Double(paddedWidth)
+            let regionY = Double(verticalTile * tileSize) / Double(paddedHeight)
             let regionWidth = Double(tileSize) / Double(paddedWidth)
             let regionHeight = Double(tileSize) / Double(paddedHeight)
             request.regionOfInterest = CGRect(x: regionX, y: regionY, width: regionWidth, height: regionHeight)
@@ -131,11 +131,16 @@ func tileUpscaleImage(image: CGImage) throws -> CGImage {
 }
 
 func upscale(_ imageURL: URL) async throws -> Data? {
-    guard let nsImage = NSImage(contentsOfFile: imageURL.path), let cgImage = nsImage.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+    guard let nsImage = NSImage(contentsOfFile: imageURL.path),
+          let cgImage = nsImage.cgImage(forProposedRect: nil, context: nil, hints: nil)
+    else {
         throw UpscaleError.generic("Error loading image: \(imageURL.path)")
     }
     let cgImageUpscaled = try tileUpscaleImage(image: cgImage)
-    let upscaledNsImage = NSImage(cgImage: cgImageUpscaled, size: NSSize(width: cgImageUpscaled.width, height: cgImageUpscaled.height))
+    let upscaledNsImage = NSImage(
+        cgImage: cgImageUpscaled,
+        size: NSSize(width: cgImageUpscaled.width, height: cgImageUpscaled.height)
+    )
 
     return upscaledNsImage.tiffRepresentation
 }

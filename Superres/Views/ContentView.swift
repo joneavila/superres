@@ -72,10 +72,12 @@ struct ContentView: View {
                             let imageWidth = 200.0
                             let imageHeight = 150.0
                             let numberOfColumns = Int(width / imageWidth)
-                            let columns = Array(repeating: GridItem(.flexible(), spacing: 0), count: max(numberOfColumns, 1))
+                            let columns = Array(
+                                repeating: GridItem(.flexible(), spacing: 0),
+                                count: max(numberOfColumns, 1)
+                            )
                             LazyVGrid(columns: columns, spacing: 20) {
-                                ForEach(viewModel.imageStates.indices, id: \.self) {
-                                    index in
+                                ForEach(viewModel.imageStates.indices, id: \.self) { index in
                                     ImageView(imageState: viewModel.imageStates[index])
                                         .frame(height: imageHeight)
                                         .padding(.horizontal, 10)

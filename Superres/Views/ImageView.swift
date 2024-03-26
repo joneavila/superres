@@ -28,9 +28,19 @@ struct ImageView: View {
 }
 
 #Preview("ImageView (Before Upscale)") {
-    ImageView(imageState: ImageState(originalImage: NSImage(named: "Butterfly256x171")!, originalImageUrl: URL(string: "image")!))
+    ImageView(
+        imageState: ImageState(
+            originalImage: NSImage(named: "Butterfly256x171")!,
+            originalImageUrl: URL(string: "image")!
+        )
+    )
 }
 
 // #Preview("ImageView (After Upscale)") {
-//    ImageView(imageState: ImageState(originalImage: NSImage(named: "Butterfly256x171")!, originalImageUrl: URL(string: "image")!, upscaledImage: NSImage(named: "Butterfly4096x2731")!))
+//    ImageView(
+//        imageState: ImageState(
+//            originalImage: NSImage(named: "Butterfly256x171")!,
+//            originalImageUrl: URL(string: "image")!,
+//            upscaledImage: NSImage(named: "Butterfly4096x2731")!)
+//    )
 // }
