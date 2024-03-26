@@ -163,27 +163,10 @@ struct DividerView: View {
     }
 }
 
-struct SpinnerView: View {
-    var body: some View {
-        ZStack {
-            Rectangle()
-                .fill(.clear)
-                .background(.ultraThinMaterial)
-                .cornerRadius(10)
-                .frame(width: 50, height: 50)
-            ProgressView()
-        }
-    }
-}
-
 #Preview("ContentView") {
     ContentView()
 }
 
 #Preview("ImagePlaceholderView") {
     ImagePlaceholderView()
-}
-
-#Preview("SpinnerView") {
-    SpinnerView()
 }
